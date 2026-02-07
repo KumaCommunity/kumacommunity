@@ -1,30 +1,115 @@
 /**
- * Any CSS included here will be global. The classic template
- * bundles Infima by default. Infima is a CSS framework designed to
- * work well for content-centric websites.
+ * Global theme variables (Infima)
  */
-
-/* You can override the default Infima variables here. */
 :root {
-  --ifm-color-primary: #2e8555;
-  --ifm-color-primary-dark: #29784c;
-  --ifm-color-primary-darker: #277148;
-  --ifm-color-primary-darkest: #205d3b;
-  --ifm-color-primary-light: #33925d;
-  --ifm-color-primary-lighter: #359962;
-  --ifm-color-primary-lightest: #3cad6e;
-  --ifm-code-font-size: 95%;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+  --ifm-color-primary: #8c2f2f;
+  --ifm-color-primary-dark: #7a2929;
+  --ifm-color-primary-darker: #6f2525;
+  --ifm-color-primary-darkest: #5a1e1e;
+  --ifm-color-primary-light: #a33a3a;
+  --ifm-color-primary-lighter: #ad4242;
+  --ifm-color-primary-lightest: #c45a5a;
+
+  --ifm-background-color: #f6f5f4;
+  --ifm-font-color-base: #1f1f1f;
+
+  --docusaurus-highlighted-code-line-bg: rgba(140, 47, 47, 0.08);
+
+  /* Kuma paper + ink */
+  --kuma-paper-base: #f6f5f2;
+  --kuma-paper-warm: #f2efe9;
+  --kuma-paper-shadow: rgba(0, 0, 0, 0.06);
+
+  --kuma-ink-main: #1f1f1f;
+  --kuma-ink-muted: #4a4a4a;
 }
 
-/* For readability concerns, you should choose a lighter palette in dark mode. */
-[data-theme='dark'] {
-  --ifm-color-primary: #25c2a0;
-  --ifm-color-primary-dark: #21af90;
-  --ifm-color-primary-darker: #1fa588;
-  --ifm-color-primary-darkest: #1a8870;
-  --ifm-color-primary-light: #29d5b0;
-  --ifm-color-primary-lighter: #32d8b4;
-  --ifm-color-primary-lightest: #4fddbf;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+/**
+ * Dark mode variables
+ */
+[data-theme="dark"] {
+  --ifm-color-primary: #d98b8b;
+  --ifm-color-primary-dark: #c97878;
+  --ifm-color-primary-darker: #bf6e6e;
+  --ifm-color-primary-darkest: #9f5757;
+  --ifm-color-primary-light: #e3a1a1;
+  --ifm-color-primary-lighter: #e7aaaa;
+  --ifm-color-primary-lightest: #f0c6c6;
+
+  --ifm-background-color: #121212;
+  --ifm-font-color-base: #ededed;
+
+  --docusaurus-highlighted-code-line-bg: rgba(217, 139, 139, 0.15);
+}
+
+/**
+ * Global typography (safe everywhere)
+ */
+body {
+  font-feature-settings: "liga", "kern";
+}
+
+h1,
+h2,
+h3 {
+  letter-spacing: 0.02em;
+}
+
+/**
+ * Paper effect: DOCS/GUIDES ONLY (LIGHT MODE)
+ */
+html:not([data-theme="dark"]) .main-docs-wrapper {
+  background-color: var(--kuma-paper-base);
+
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.28)),
+    repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.014),
+      rgba(0, 0, 0, 0.014) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+  background-blend-mode: multiply;
+}
+
+/* “Page” container: doc markdown only (light mode) */
+html:not([data-theme="dark"]) .main-docs-wrapper .theme-doc-markdown {
+  background-color: var(--kuma-paper-warm);
+  box-shadow: 0 1px 4px var(--kuma-paper-shadow);
+  border-radius: 3px;
+  padding: clamp(1.25rem, 2vw, 2rem);
+}
+
+/* Code styling: light mode only, docs only */
+html:not([data-theme="dark"]) .main-docs-wrapper .theme-doc-markdown pre {
+  box-shadow: none;
+}
+
+html:not([data-theme="dark"]) .main-docs-wrapper .theme-doc-markdown pre code {
+  background-color: #eeeeee;
+}
+
+html:not([data-theme="dark"])
+  .main-docs-wrapper
+  .theme-doc-markdown
+  :not(pre)
+  > code {
+  background-color: rgba(140, 47, 47, 0.08);
+  border-radius: 4px;
+  padding: 0.12em 0.32em;
+}
+
+/**
+ * DOCS/GUIDES (DARK MODE)
+ */
+html[data-theme="dark"] .main-docs-wrapper {
+  background-image: none;
+  background-color: var(--ifm-background-color);
+}
+
+/* Keep a subtle panel, but dark */
+html[data-theme="dark"] .main-docs-wrapper .theme-doc-markdown {
+  background-color: rgba(255, 255, 255, 0.045);
+  box-shadow: none;
 }
