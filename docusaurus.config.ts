@@ -133,6 +133,23 @@ const config: Config = {
             // },
           ],
         },
+        {
+          title: 'Legal',
+          items: [
+            {
+              label: 'Privacy Policy',
+              href: '/PrivacyPolicy',
+            },
+            {
+              label: 'Terms of Use',
+              href: '/TermsOfUse',
+            },
+            {
+              label: 'Other Polcies',
+              href: '/Policies',
+            },
+          ],
+        },
       ],
       copyright: `Copyright © ${new Date().getFullYear()} Cybear Technologies LLC DBA Kuma Community, Inc.`,
     },
