@@ -52,7 +52,7 @@ You can use this site in whatever way serves you best:
 Many sections build on one another. Foundational material supports more advanced applications. If you are new to a topic, start with the basics and work forward. There is no rush. Competence compounds.
 
 For detailed legal and policy information regarding this site, please review the policies and disclaimers page:  
-`pages/policies`
+[Policies](../policies)
 
 ## About Us
 

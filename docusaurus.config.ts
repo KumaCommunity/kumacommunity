@@ -138,15 +138,15 @@ const config: Config = {
           items: [
             {
               label: 'Privacy Policy',
-              href: '/PrivacyPolicy',
+              href: '/privacypolicy',
             },
             {
               label: 'Terms of Use',
-              href: '/TermsOfUse',
+              href: '/termsofuse',
             },
             {
               label: 'Other Polcies',
-              href: '/Policies',
+              href: '/policies',
             },
           ],
         },
