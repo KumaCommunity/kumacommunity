@@ -108,3 +108,59 @@ Exposure note: site is static. Dev-server and CLI-only advisories are not reacha
 6. **M6 – CI (`.github/workflows`), docs, Cloudflare Pages notes, final report.
 
 Risks: route casing change could alter public URLs (`/PrivacyPolicy` vs `/privacypolicy`) – must keep the public paths working; decide between correcting links and adding redirects. Homepage/template content stays as-is unless the owner says otherwise.
+
+---
+
+## Phase 2 – Docusaurus 3.10.2 (done, M2)
+
+- All `@docusaurus/*` packages aligned at **3.10.2** (exact pins). `npm ls` shows one version.
+- `future.v4` changed from `true` to explicit per-flag object:
+  - `removeLegacyPostBuildHeadAttribute: true` (enabled)
+  - `mdx1CompatDisabledByDefault: true` (enabled; required one content fix below)
+  - `useCssCascadeLayers: false` (**deferred**: changes CSS cascade; needs visual verification in Phase 6)
+  - `siteStorageNamespacing: false` (**deferred**: would reset stored theme preference once)
+  - `fasterByDefault: false` (**deferred**: would switch to Rspack and require `@docusaurus/faster`; keeps webpack)
+- Build failure found in 3.10.2 with MDX v3 defaults: `<!-- truncate -->` in `blog/2021-08-26-welcome/index.md` → replaced with `{/* truncate */}` (same excerpt marker, MDX-native).
+- Pre-existing broken links fixed (these made `main` build fail):
+  - Footer `href: '/privacypolicy' | '/termsofuse' | '/policies'` → `to: '/PrivacyPolicy' | '/TermsOfUse' | '/Policies'` (real routes generated from `src/pages/*.md`).
+  - `docs/intro.md` `[Policies](../policies)` → `[Policies](/Policies)`.
+  - Page routes/filenames unchanged.
+
+## Phase 3 – Dependencies & toolchain (M3, in progress)
+
+- `react` / `react-dom`: 19.2.4 → **19.3.1** (pinned exact, identical versions).
+- `typescript`: `~5.6.2` → `~5.9.3`. TypeScript 7.x (native port, major) **deferred**: separate migration.
+- Node: `engines.node` `>=20.0` → `>=24.0.0`; added `.nvmrc` = `24`. Node 24 is Active LTS; Node 26 is current LTS and also builds locally (both verified).
+
+## Phase 4 – Security (M3)
+
+Audit before: 55 (18 critical, 21 high, 15 moderate, 1 low). Audit after: **36 (0 critical, 33 high, 3 moderate)**; the 33 "high" entries are all dependents of a single unfixed advisory (below).
+
+Remediation via targeted `overrides` (patched versions kept inside each parent's declared semver range, except where noted). No `npm audit fix --force`.
+
+| Package | Path | Advisory (summary) | Fix applied |
+|---|---|---|---|
+| tinypool | @docusaurus/core (SSG worker) | **critical** prototype-pollution → RCE gadget | `2.1.2` (**major**; API used by Docusaurus: `minThreads/maxThreads/run/destroy` unchanged; build verified) |
+| proxy-addr | express ← webpack-dev-server | **critical** IP spoofing | `2.0.8` |
+| shell-quote | launch-editor ← webpack-dev-server | **critical** newline escaping; high DoS | `1.12.0` |
+| websocket-driver | sockjs ← webpack-dev-server | **critical** message corruption | `0.7.5` |
+| serialize-javascript | copy-webpack-plugin, terser, css-minimizer (build) | **high** RCE via RegExp.flags/Date | `7.1.4` (**major** from 6; build verified) |
+| ws | webpack-dev-server 8.x / webpack-bundle-analyzer 7.x | **high** memory exhaustion | `8.23.0` / `7.5.14` (nested) |
+| launch-editor | webpack-dev-server | high existsSync bypass; moderate | `2.14.2` |
+| lodash | core, preset | high code injection | `4.18.1` |
+| joi | @docusaurus/types, utils-validation | high ReDoS, DoS | `17.13.9` |
+| fast-uri | ajv ← schema-utils | multiple high | `3.1.9` |
+| path-to-regexp | express (0.1.x) | high ReDoS | `0.1.13` (nested under express) |
+| body-parser | express | high DoS | `1.20.9` |
+| compression | webpack-dev-server | high memory leak DoS | `1.8.2` |
+| proxy/http-proxy-middleware | webpack-dev-server | moderate | `^2.0.10` |
+| webpack-dev-server | @docusaurus/core | moderate ×4 | `^5.2.7` (in-range) |
+| qs | express | moderate/low | `6.16.2` (nested under express) |
+| picomatch | micromatch/chokidar/jest-worker (build) | **high** ReDoS (`<=4.0.7`) | **No fix exists** (4.0.7 is latest 4.x; 2.3.2 forced by override). Residual, see below |
+
+### Residual, documented risks
+
+- **picomatch ≤4.0.7 ReDoS (high, GHSA-fc5q-39xc-vjpf)**: no patched release published as of 2026-11-17. Used only for build-time glob matching against repo paths (trusted). Not reachable from the deployed static artifact. Re-check each upgrade cycle; remove the override once a fixed version is available.
+- **ajv <8.18.0 `$data` ReDoS (moderate)**: `$data` option not used. Not overridden (multiple ajv majors in tree; override would be unsafe).
+- **uuid <11.1.1 buffer bounds check (moderate)**: only when caller passes `buf`; not overridden (legacy transitive v8.3.2 in dev tooling).
+- Audit's suggested `@docusaurus/core` "fix" (3.7.0) is a downgrade and was not used.
