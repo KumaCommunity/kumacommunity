@@ -16,8 +16,9 @@ const config: Config = {
     v4: {
       removeLegacyPostBuildHeadAttribute: true,
       mdx1CompatDisabledByDefault: true,
-      // Deferred: changes CSS cascade; needs visual verification.
-      useCssCascadeLayers: false,
+      // Enabled: custom.css now wins over Infima via layer order; visually
+      // verified against pre-upgrade snapshots (light + dark).
+      useCssCascadeLayers: true,
       // Deferred: changes browser storage keys (theme preference resets once).
       siteStorageNamespacing: false,
       // Deferred: switches bundler to Rspack and requires @docusaurus/faster.
