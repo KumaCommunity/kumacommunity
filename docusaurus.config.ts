@@ -11,7 +11,18 @@ const config: Config = {
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
   future: {
-    v4: true, // Improve compatibility with the upcoming Docusaurus v4
+    // Docusaurus v4 compatibility flags, evaluated individually.
+    // See https://docusaurus.io/docs/api/docusaurus-config#future
+    v4: {
+      removeLegacyPostBuildHeadAttribute: true,
+      mdx1CompatDisabledByDefault: true,
+      // Deferred: changes CSS cascade; needs visual verification.
+      useCssCascadeLayers: false,
+      // Deferred: changes browser storage keys (theme preference resets once).
+      siteStorageNamespacing: false,
+      // Deferred: switches bundler to Rspack and requires @docusaurus/faster.
+      fasterByDefault: false,
+    },
   },
 
   // Set the production url of your site here
@@ -138,15 +149,15 @@ const config: Config = {
           items: [
             {
               label: 'Privacy Policy',
-              href: '/privacypolicy',
+              to: '/PrivacyPolicy',
             },
             {
               label: 'Terms of Use',
-              href: '/termsofuse',
+              to: '/TermsOfUse',
             },
             {
               label: 'Other Polcies',
-              href: '/policies',
+              to: '/Policies',
             },
           ],
         },
