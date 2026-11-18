@@ -1,7 +1,25 @@
 # Kuma Community – Modernization Report
 
 Branch: `modernize/docusaurus-3.10` (off `main`, not merged).
-Status: **All milestones M1–M6 complete on this branch. Not merged, not deployed.**
+Status: **M1–M6 complete; latest-stable follow-up below supersedes historical version choices. Not merged, not deployed.**
+
+---
+
+## Latest-stable follow-up — November 17, 2026
+
+Follow-up starts at `66b36ac` on the same branch, clean working tree. Reviewed prior implementation commits and this report; no repository `AGENTS.md` exists (user-level instructions apply). No website content changes planned.
+
+Fresh baseline on Node 26.13.1 / npm 11.20.0: `npm ci`, `npm run typecheck`, `npm run build`, Chromium installation, and Playwright with visual snapshots all exit 0: 22 functional + 20 visual tests. Saved pre-change production output and same-browser visual baselines outside the repository under `/tmp/kuma-modernization/`.
+
+### TypeScript 7 migration
+
+- npm `latest` verifies TypeScript **7.0.2**, not a prerelease. Installed native compiler and explicit latest stable types: `@types/react` / `@types/react-dom` **19.3.0**, `@types/node` **26.6.6**.
+- First `tsc` attempt failed with **TS5102: Option 'baseUrl' has been removed**. Both project config and `@docusaurus/tsconfig@3.10.2` set it. Reset inherited `baseUrl` with `null` and explicitly rebase `@site/*` to `./*` in the project config. No catch-all alias, deprecation suppression, patched dependency files, or error suppression added.
+- Inherited `moduleResolution: bundler`, `module: esnext`, `jsx: preserve`, ES2022/DOM, and noEmit retained. Existing upstream `skipLibCheck` unchanged. Native `npm run typecheck` and production build both exit 0; React JSX, site aliases, Docusaurus config/types and Playwright TS files resolve.
+- Reviewed Microsoft’s [TypeScript 6 announcement](https://devblogs.microsoft.com/typescript/announcing-typescript-6-0/) and [TypeScript 7 announcement](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/), including removed options and documented side-by-side API approach: `typescript: npm:@typescript/typescript6@6.0.2` plus `@typescript/native: npm:typescript@7.0.2`. Registry confirms compatibility package 6.0.2. This fallback is **not needed**: current configured Docusaurus/MDX pipeline builds with TypeScript 7 alone. No new compatibility layer installed.
+- Version-specific Context7 documentation available for `/microsoft/typescript/v7.0.2`; checked native compiler/editor guidance against official release documentation and actual installed package.
+
+Further runtime, dependency, and final validation results follow below when complete.
 
 ---
 

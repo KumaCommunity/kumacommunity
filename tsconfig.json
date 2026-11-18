@@ -1,8 +1,12 @@
 {
-  // This file is not used in compilation. It is here just for a nice editor experience.
+  // Type checking and editor configuration; Docusaurus handles transpilation.
   "extends": "@docusaurus/tsconfig",
   "compilerOptions": {
-    "baseUrl": "."
+    // Docusaurus 3.10 still sets baseUrl; null clears the removed TS 7 option.
+    "baseUrl": null,
+    "paths": {
+      "@site/*": ["./*"]
+    }
   },
   "exclude": [".docusaurus", "build"]
 }
