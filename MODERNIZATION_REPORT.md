@@ -14,12 +14,117 @@ Fresh baseline on Node 26.13.1 / npm 11.20.0: `npm ci`, `npm run typecheck`, `np
 ### TypeScript 7 migration
 
 - npm `latest` verifies TypeScript **7.0.2**, not a prerelease. Installed native compiler and explicit latest stable types: `@types/react` / `@types/react-dom` **19.3.0**, `@types/node` **26.6.6**.
-- First `tsc` attempt failed with **TS5102: Option 'baseUrl' has been removed**. Both project config and `@docusaurus/tsconfig@3.10.2` set it. Reset inherited `baseUrl` with `null` and explicitly rebase `@site/*` to `./*` in the project config. No catch-all alias, deprecation suppression, patched dependency files, or error suppression added.
-- Inherited `moduleResolution: bundler`, `module: esnext`, `jsx: preserve`, ES2022/DOM, and noEmit retained. Existing upstream `skipLibCheck` unchanged. Native `npm run typecheck` and production build both exit 0; React JSX, site aliases, Docusaurus config/types and Playwright TS files resolve.
+- First `tsc` attempt failed with **TS5102: Option 'baseUrl' has been removed**. Both project config and `@docusaurus/tsconfig@3.10.2` set it. An initial `null` reset let native type checking/build pass, but full verification caught a Playwright parser failure: **The "paths[1]" argument must be of type string. Received null**. Final fix: explicitly mirror the upstream compiler options in the project config, omit `baseUrl` entirely, and rebase `@site/*` to `./*`. No catch-all alias, deprecation suppression, patched dependency files, or error suppression added. Retain the aligned upstream config package as the reference; restore inheritance when upstream removes `baseUrl`.
+- Upstream `moduleResolution: bundler`, `module: esnext`, `jsx: preserve`, ES2022/DOM, allowJs, esModuleInterop, and noEmit explicitly retained. Existing upstream `skipLibCheck` unchanged. Native `npm run typecheck` and production build both exit 0; React JSX, site aliases, Docusaurus config/types and Playwright TS files resolve.
 - Reviewed Microsoft’s [TypeScript 6 announcement](https://devblogs.microsoft.com/typescript/announcing-typescript-6-0/) and [TypeScript 7 announcement](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/), including removed options and documented side-by-side API approach: `typescript: npm:@typescript/typescript6@6.0.2` plus `@typescript/native: npm:typescript@7.0.2`. Registry confirms compatibility package 6.0.2. This fallback is **not needed**: current configured Docusaurus/MDX pipeline builds with TypeScript 7 alone. No new compatibility layer installed.
 - Version-specific Context7 documentation available for `/microsoft/typescript/v7.0.2`; checked native compiler/editor guidance against official release documentation and actual installed package.
 
-Further runtime, dependency, and final validation results follow below when complete.
+### Registry and official release verification
+
+Checked during the November 17 local working session (November 18 UTC). npm registry: `https://registry.npmjs.org/`. Queried `version`, `dist-tags`, `engines`, and `peerDependencies` for every direct package; final `npm outdated --json` returns `{}` (exit 0). No prerelease dependencies intentionally introduced. Official release checks:
+
+- [Docusaurus v3.10.2](https://github.com/facebook/docusaurus/releases/tag/v3.10.2): current stable, including MDX link and sidebar fixes. All five direct Docusaurus packages and their transitive family stay aligned. Registry has only a **canary** Docusaurus 4; deferred.
+- [React v19.3.1](https://github.com/facebook/react/releases/tag/v19.3.1): registry stable for both React/React DOM; official patch notes concern RSC transport. Docusaurus peers accept React 19.
+- [TypeScript v7.0.2](https://github.com/microsoft/TypeScript/releases/tag/v7.0.2): official native release, also corroborated by Microsoft announcements above. Latest stable 6.x is **6.0.3**; compatibility API package latest is **6.0.2**, distinct from that compiler release. Neither fallback required.
+- [Node release index](https://nodejs.org/dist/index.json) and [official schedule](https://github.com/nodejs/Release/blob/main/schedule.json): **26.13.1**, security release dated November 10; **Lithium**, LTS since October 28. Node 24 compatibility tested with **24.22.3**.
+- [npm v12.2.3](https://github.com/npm/cli/releases/tag/v12.2.3): registry latest and official release notes. Engines `^22.22.2 || ^24.15.0 || >=26.0.0` drive the project's revised minimum.
+- [Playwright v1.65.1](https://github.com/microsoft/playwright/releases/tag/v1.65.1), [MDX 3.1.1](https://github.com/mdx-js/mdx/releases/tag/3.1.1), [Prism renderer 2.4.1](https://github.com/FormidableLabs/prism-react-renderer/releases/tag/prism-react-renderer%402.4.1), [clsx 2.1.1](https://github.com/lukeed/clsx/releases/tag/v2.1.1): latest stable, already installed; retained. Reviewed release notes; no forced major migration necessary.
+- GitHub Actions official releases: [checkout v7.0.1](https://github.com/actions/checkout/releases/tag/v7.0.1), [setup-node v7.1.0](https://github.com/actions/setup-node/releases/tag/v7.1.0), [upload-artifact v7.0.2](https://github.com/actions/upload-artifact/releases/tag/v7.0.2). Updated floating major references to these explicit latest stable tags. Tags are not immutable SHA pins.
+
+### Previous and final versions
+
+Previous means the completed modernization at `66b36ac`, not the original main branch.
+
+| Component | Previous | Final |
+|---|---|---|
+| Preferred Node (`.nvmrc`) | 24 | **26.13.1 LTS** |
+| Tested Node runtimes | historical 24/26 | **24.22.3 and 26.13.1**, fresh installs |
+| Minimum supported Node | >=24.0.0 | **^24.15.0 or >=26.0.0** |
+| npm | 11.20.0 locally, unpinned | **12.2.3**, packageManager + CI pin |
+| TypeScript | 5.9.3 | **7.0.2** |
+| @types/node | 25.2.0 transitive | **26.6.6**, explicit dev dependency |
+| @types/react | 19.2.10 transitive | **19.3.0**, explicit dev dependency |
+| @types/react-dom | absent | **19.3.0**, explicit dev dependency |
+| @docusaurus/core, preset-classic, module-type-aliases, tsconfig, types | 3.10.2 | **3.10.2**, retained |
+| react / react-dom | 19.3.1 | **19.3.1**, retained |
+| @mdx-js/react | 3.1.1 | **3.1.1**, retained |
+| clsx | 2.1.1 | **2.1.1**, retained |
+| prism-react-renderer | 2.4.1 | **2.4.1**, retained |
+| @playwright/test | 1.65.1 | **1.65.1**, retained |
+| tinypool override | 2.1.2 | **2.2.0** |
+| serialize-javascript override | 7.1.4 | **7.1.4**, retained |
+| ajv (8.x tree) | 8.17.1 | **8.20.0**, supported upstream range |
+| Security override entries | 16 top-level | **2** |
+| checkout / setup-node / upload-artifact | v7 / v7 / v7 | **v7.0.1 / v7.1.0 / v7.0.2** |
+
+`npm update` refreshed transitive packages only within supported parent ranges (apart from the two retained security-major overrides). Examples: webpack 5.112.2, terser 5.51.2, core-js 3.51.0, schema-utils 4.8.3; Babel runtime, markdown utilities and types also refreshed in the lockfile. No new linter, bundler, or browser platform added. `check` now avoids building twice: typecheck → test:e2e (build + tests).
+
+### TypeScript compiler API and editor findings
+
+Inspected installed Docusaurus core/utils/babel/MDX code and dependency metadata. Docusaurus loads TypeScript configuration with **jiti**, transpiles application TSX through **Babel**, and compiles MDX independently of the TypeScript programmatic API. Native `tsc` checks the project separately. Searches of runtime JavaScript in `@docusaurus`, `@mdx-js`, and Playwright found no direct `typescript` API imports.
+
+**Latent API consumer:** transitive `cosmiconfig@8.3.6` declares an optional TypeScript peer and calls `typescript.transpileModule`, enums, and config APIs in its `.ts` config loaders. Those APIs are not provided by TypeScript 7's stable entry point. This site's configured build does not invoke those loaders: no custom PostCSS/SVGR TypeScript config. Existing Docusaurus config/sidebars TS files use jiti and work. A future `.postcssrc.ts`/SVGR TS configuration could activate that incompatibility; upgrade the loader or use Microsoft's documented side-by-side API package then. Do not infer universal ecosystem API compatibility from this successful migration.
+
+Editor check limited to config/type resolution with native compiler and official TypeScript 7 language-server guidance. No VS Code executable/interactive editor session available; GUI diagnostics, completion, and rename were **not tested**. README documents a TypeScript-7-capable language service rather than pointing an old tsserver SDK setting at the native compiler. No global editor settings changed.
+
+### Runtime, CI, and Cloudflare Pages
+
+- Preferred Node **26.13.1**, npm **12.2.3**. npm 12 supports Node 24 starting at **24.15.0**, so engines exclude Node 25 and retain maintained Node 24. Latest Node 24 tested; the exact minimum patch was not separately exercised. Node 26 typings are appropriate to the preferred runtime; no new runtime APIs were added to website code.
+- CI validation matrix runs Node **24 and 26**, installs pinned npm before clean install, then checks types, builds and runs existing browser tests. Reports use per-runtime names to avoid upload collisions. Audit job uses `.nvmrc`. No remote workflow run performed; local equivalent and `actionlint` pass.
+- Cloudflare [official build image documentation](https://developers.cloudflare.com/pages/configuration/build-image/) confirms explicit Node selection and `.nvmrc`. README specifies v3 image, `NODE_VERSION=26.13.1`, `SKIP_DEPENDENCY_INSTALL=1`, and custom build `npm install --global npm@12.2.3 && npm ci && npm run build`. This avoids relying on legacy v1 `NPM_VERSION`, since v3's default npm follows Node. Apply to production and preview when configuring Pages. Output remains `build`; no deployment/account changes made or claimed.
+
+### Security override review and residual advisories
+
+Removed overrides for `body-parser`, `compression`, `fast-uri`, `joi`, `launch-editor`, `lodash`, `proxy-addr`, `shell-quote`, `websocket-driver`, `webpack-dev-server`, `http-proxy-middleware`, and nested Express `path-to-regexp`/`qs` and analyzer `ws`. Fresh resolution retains patched releases within upstream constraints. Removed the ineffective global `picomatch` override; it did not fix the advisory and could impose major downgrades. Current parent ranges still resolve 2.3.2; no patched release exists.
+
+Retained only:
+
+1. **tinypool 2.2.0**: beyond Docusaurus's `^1.0.2`; [official release notes](https://github.com/tinylibs/tinypool/releases/tag/v2.2.0) cover CJS-reference removal and URL filenames. Docusaurus dynamically imports the ESM default export. Normal small-site builds do not exercise pooled SSG, so **additional builds explicitly enabled `future.faster.ssgWorkerThreads` with `DOCUSAURUS_SSG_WORKER_THREAD_COUNT=2` on both runtimes**. Both exit 0, verifying real pool creation, tasks and destruction. Temporary config removed; permanent performance flags unchanged.
+2. **serialize-javascript 7.1.4**: patched major beyond consumer ranges. Production webpack/minifier builds and browser hydration tests pass on both runtimes; no function/API shim used. Retain until upstream adopts patched major ranges.
+
+Final `npm audit`: **35 total: 33 high, 2 moderate, 0 critical**, down from fresh baseline 36 (33 high, 3 moderate). Counts include vulnerable ancestor packages, not 35 distinct advisories. Two root advisories remain:
+
+- **picomatch <=4.0.7**, high [GHSA-fc5q-39xc-vjpf](https://github.com/advisories/GHSA-fc5q-39xc-vjpf): no fix available; build-time glob matching on repository paths. No user-supplied glob service deployed.
+- **uuid <11.1.1**, moderate [GHSA-w5hq-g745-h8pq](https://github.com/advisories/GHSA-w5hq-g745-h8pq): transitive 8.3.2 in tooling; no supported in-range fix. Did not force a breaking major or downgrade Docusaurus.
+
+The ajv advisory is resolved through upstream-compatible update to 8.20.0. Static deployment does not expose development/build dependencies as a running server, but CI/build input remains a trust boundary. `npm audit` intentionally exits **1** for residual findings; existing critical-only gate `npm run audit` exits **0**. Gate was not weakened.
+
+### Final validation
+
+Full logs, registry metadata, official-release responses, pre-change build and visual baselines retained locally in **`/tmp/kuma-modernization/`** (temporary, not committed). Visual baseline was captured **before** dependency changes with the same Playwright/browser/OS, then reused without snapshot updates. Chromium **159.0.8154.6**, revision **1255**, verified against official Playwright release notes.
+
+| Check | Command / method | Node 26.13.1 | Node 24.22.3 |
+|---|---|---|---|
+| Clean install, npm 12.2.3 | `npm ci` | exit 0 | exit 0 |
+| Clear generated cache | `npm run clear` | exit 0 | exit 0 |
+| Native type checking | `npm run typecheck` | exit 0 | exit 0 |
+| Production build + broken links | `npm run build` | exit 0 | exit 0 |
+| Functional + visual tests | `KUMA_VISUAL=1 KUMA_SNAPSHOT_DIR='/tmp/kuma-modernization/snapshots/{arg}{ext}' npx playwright test` | **42/42**, exit 0 | **42/42**, exit 0 |
+| Forced two-worker SSG | Temporary config + worker count 2 | exit 0 | exit 0 |
+| HTML route inventory | Compare against fresh baseline | identical **24** routes | identical **24** routes |
+| Sitemap, RSS and Atom | Byte comparison against baseline | all identical | all identical |
+
+Additional checks:
+
+- `CI=1 npm run check`: exit **0** on Node 26, **22 passed / 20 optional visual tests skipped**. Full opt-in suite above independently ran all 42 on both runtimes. Tests cover doc/blog navigation, legal links, accessibility probes, responsive layouts and dark theme; 20 comparisons cover five pages × desktop/mobile × light/dark.
+- `npx playwright install chromium`: exit **0**; existing binary matches retained latest Playwright. Linux `--with-deps` remains in CI, not executed on this macOS host.
+- `npm ls --all`: exit **0**, no invalid/missing peers. `npm outdated --json`: exit **0**, `{}`.
+- `npm audit --json`: exit **1**, residual advisories above. `npm run audit`: exit **0**.
+- `actionlint` **1.7.12** on `.github/workflows/ci.yml`: exit **0**. GitHub-hosted job execution still unverified.
+- Development server smoke on Node 26: homepage, `/docs/intro`, `/blog` each HTTP **200** using browser `Accept: text/html`. Early raw urllib probes returned 404 for SPA paths without that header; browser-style navigation works. No dev-server options changed.
+- `git diff --check`: exit **0**. No website source/content, styles or public URLs changed.
+
+Nonfatal warnings preserved: npm 12 blocks unapproved `core-js` postinstall and optional macOS `fsevents` install scripts; builds/tests pass without allow-list changes. Legacy uuid deprecation remains. Node 26 emits an experimental localStorage warning during SSG; no build/browser failure and no suppressing flag added.
+
+### Remaining work / future migrations
+
+- Restore Docusaurus tsconfig inheritance once upstream removes `baseUrl`; avoid drifting from its supported options meanwhile.
+- Monitor cosmiconfig's optional TS API loaders before adding TypeScript PostCSS/SVGR config. Use documented Microsoft side-by-side installation only if a real consumer requires it.
+- Monitor upstream patched picomatch/uuid and adoption of tinypool/serialize-javascript security majors; remove final overrides when supported by upstream.
+- Docusaurus 4 remains deferred until stable. Consider immutable action SHA pins separately.
+- Run actual GitHub CI and validate Cloudflare account/image settings before any deployment. Interactive editor validation remains outstanding.
+
+Implementation commits: `8290439` (native TypeScript + explicit types), `f738504` (Playwright-compatible config), `c7558f0` (Node/npm/CI/dependency refresh and docs). Final report committed separately. No merge, push or deploy performed.
 
 ---
 
