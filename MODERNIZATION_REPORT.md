@@ -185,7 +185,7 @@ Warnings / deliberately not changed (content owner decisions):
 - `blog/tags.yml` and `blog/2021-08-26-welcome/index.md` are starter content ("Facebook tag description", "Hola" tag, Welcome post text).
 - Typo in public text: tagline `Building a resilent community.` and footer `Other Polcies`. Not changed (content).
 - `.main-docs-wrapper` rules in `custom.css` target a class that no component renders, so the paper effect is dead CSS. Left as-is (changing it would change appearance).
-- TypeScript warning-free `baseUrl` in `tsconfig.json` is deprecated in TS 6+/7; will need change before TS 7 upgrade.
+- `tsconfig.json` sets `baseUrl`, which TypeScript 6+/7 deprecates. Not an issue on TS 5.9; must be removed before a TS 7 upgrade.
 
 ## Phase 6 – Tests and regression verification (M5)
 
@@ -249,7 +249,7 @@ Baseline values for comparison: build exit 1 (broken links), audit 55 (18 critic
 | ajv < 8.18.0 `$data` ReDoS | moderate | schema-utils | `$data` option unused. Not overridden (multiple ajv majors in tree). |
 | uuid < 11.1.1 buffer check | moderate | legacy transitive 8.3.2 | Only when `buf` is passed. Not overridden. |
 
-Docusaurus' own critical advisories (for `@docusaurus/core` ≤ 4.0.0-canary-6835) listed by npm audit: the audit's suggested fix is a downgrade to 3.7.0 and was not used. The affected range is canary-only (≤ 4.0.0-canary-6835 includes 3.x by range arithmetic); the stable 3.10.2 line is not flagged as a direct advisory in `npm audit` after overrides. Confirm against the advisory text when the next Docusaurus release is available.
+Docusaurus-related advisories: the `npm audit` entries for `@docusaurus/*` (critical before, now only high) are range-matches (`<=4.0.0-canary-6835`) that propagate from the picomatch residual above. Its suggested `@docusaurus/core` fix (3.7.0) is a downgrade and was not used. Re-check when Docusaurus publishes a newer 3.x.
 
 ## Breaking changes and compatibility decisions
 
