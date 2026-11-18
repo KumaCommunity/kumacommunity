@@ -11,7 +11,19 @@ const config: Config = {
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
   future: {
-    v4: true, // Improve compatibility with the upcoming Docusaurus v4
+    // Docusaurus v4 compatibility flags, evaluated individually.
+    // See https://docusaurus.io/docs/api/docusaurus-config#future
+    v4: {
+      removeLegacyPostBuildHeadAttribute: true,
+      mdx1CompatDisabledByDefault: true,
+      // Enabled: custom.css now wins over Infima via layer order; visually
+      // verified against pre-upgrade snapshots (light + dark).
+      useCssCascadeLayers: true,
+      // Deferred: changes browser storage keys (theme preference resets once).
+      siteStorageNamespacing: false,
+      // Deferred: switches bundler to Rspack and requires @docusaurus/faster.
+      fasterByDefault: false,
+    },
   },
 
   // Set the production url of your site here
@@ -20,10 +32,10 @@ const config: Config = {
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
 
-  // GitHub pages deployment config.
-  // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'Kuma Community', // Usually your GitHub org/user name.
-  projectName: 'kumacommunity', // Usually your repo name.
+  // Source repository (github.com/KumaCommunity/kumacommunity). Used by
+  // `docusaurus deploy` only; production hosting is Cloudflare Pages.
+  organizationName: 'KumaCommunity',
+  projectName: 'kumacommunity',
 
   onBrokenLinks: 'throw',
 
@@ -41,8 +53,6 @@ const config: Config = {
       {
         docs: {
           sidebarPath: './sidebars.ts',
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
         },
         blog: {
           showReadingTime: true,
@@ -50,9 +60,7 @@ const config: Config = {
             type: ['rss', 'atom'],
             xslt: true,
           },
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          // Useful options to enforce blogging best practices
+          // Blogging best-practice warnings (non-fatal).
           onInlineTags: 'warn',
           onInlineAuthors: 'warn',
           onUntruncatedBlogPosts: 'warn',
@@ -84,11 +92,6 @@ const config: Config = {
           label: 'Guides',
         },
         {to: '/blog', label: 'Blog', position: 'left'},
-        // {
-        //   href: 'https://github.com/facebook/docusaurus',
-        //   label: 'GitHub',
-        //   position: 'right',
-        // },
       ],
     },
     footer: {
@@ -103,23 +106,6 @@ const config: Config = {
             },
           ],
         },
-        // {
-        //   title: 'Community',
-        //   items: [
-        //     {
-        //       label: 'Stack Overflow',
-        //       href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-        //     },
-        //     {
-        //       label: 'Discord',
-        //       href: 'https://discordapp.com/invite/docusaurus',
-        //     },
-        //     {
-        //       label: 'X',
-        //       href: 'https://x.com/docusaurus',
-        //     },
-        //   ],
-        // },
         {
           title: 'More',
           items: [
@@ -127,10 +113,6 @@ const config: Config = {
               label: 'Blog',
               to: '/blog',
             },
-            // {
-            //   label: 'GitHub',
-            //   href: 'https://github.com/facebook/docusaurus',
-            // },
           ],
         },
         {
@@ -138,15 +120,15 @@ const config: Config = {
           items: [
             {
               label: 'Privacy Policy',
-              href: '/privacypolicy',
+              to: '/PrivacyPolicy',
             },
             {
               label: 'Terms of Use',
-              href: '/termsofuse',
+              to: '/TermsOfUse',
             },
             {
               label: 'Other Polcies',
-              href: '/policies',
+              to: '/Policies',
             },
           ],
         },

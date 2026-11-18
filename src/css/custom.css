@@ -26,8 +26,11 @@
 
 /**
  * Dark mode variables
+ * Scoped to html so specificity (0,1,1) matches Infima's own dark block and
+ * this file, loaded after Infima, wins. Plain [data-theme] lost to Infima
+ * in Docusaurus 3.10 and changed the dark background.
  */
-[data-theme="dark"] {
+html[data-theme="dark"] {
   --ifm-color-primary: #d98b8b;
   --ifm-color-primary-dark: #c97878;
   --ifm-color-primary-darker: #bf6e6e;
