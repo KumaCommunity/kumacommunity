@@ -1,115 +1,39 @@
-# Kuma Community – Documentation Site
+# Kuma Community
 
-This repository contains the source for the **Kuma Community** documentation website.
-
-The site is built with **Docusaurus** and serves as a long-form knowledge base that supports and extends video content. Its purpose is to host essays, living documentation, reference material, and curated links that benefit from permanence, revision history, and structured navigation.
-
-Source is hosted on **GitHub** (`KumaCommunity/kumacommunity`). The planned production host is **Cloudflare Pages** (see [Deployment](#deployment)).
-
----
-
-## Purpose and Scope
-
-This site exists to solve problems that video alone does not:
-
-- Long-form explanations
-- Living documents
-- Reference materials
-- Diagrams, tables, and structured frameworks
-- Video documentation
-
----
-
-## Requirements
-
-- **Node.js 26 LTS** preferred (`.nvmrc` pins `26.13.1`). Node 24 remains supported; minimum `24.15.0` (npm 12 requirement). Supported range: `^24.15.0 || >=26.0.0`; CI tests Node 24 and 26.
-- **npm 12.2.3** (`packageManager` pin; lockfile is `package-lock.json`). Do not use another package manager.
-
-```bash
-nvm use            # or: fnm use / volta run, reads .nvmrc
-npm install --global npm@12.2.3
-npm ci             # install exactly what is in package-lock.json
-```
-
----
+Kuma Community is a collection of practical guides on civilian preparedness and technology. This repository contains the articles and source code for [www.kumacommunity.com](https://www.kumacommunity.com).
 
 ## Local development
 
-| Command | Purpose |
-|---|---|
-| `npm start` | Dev server with hot reload at http://localhost:3000 |
-| `npm run build` | Production build into `build/` (fails on broken links) |
-| `npm run serve` | Serve the existing `build/` locally |
-| `npm run typecheck` | Native TypeScript 7.0.2 check (`tsc`, no emit) |
-| `npm run test:e2e` | Build, then run Playwright smoke tests |
-| `npm run test:visual` | Build, then run pixel comparisons (opt-in, see below) |
-| `npm run check` | Typecheck + build + smoke tests (what CI runs) |
-| `npm run audit` | `npm audit`, fails on critical advisories |
-| `npm run clear` | Clear Docusaurus cache |
+The site uses Docusaurus. The project pins Node.js 26.13.1 and npm 12.2.3. With `nvm` installed, run these commands from the repository root:
 
-First-time Playwright setup on a machine: `npx playwright install chromium`.
-
-### Tests
-
-- `e2e/site.spec.ts` covers the homepage, docs sidebar and nested articles, blog index/post/tags/feeds, policy pages, responsive widths (1920 → 375px), keyboard focus, alt text, and dark-mode theme following.
-- Visual comparisons are **opt-in** because baselines are OS- and browser-specific. Generate baselines on your machine with `npm run test:visual` (first run writes them to `e2e/__snapshots__/`, which is git-ignored).
-- Set `BASE_URL=https://...` to run the smoke tests against another deployment without starting a local server.
-
----
-
-## Upgrading dependencies
-
-1. Create a branch.
-2. Bump Docusaurus packages together: all `@docusaurus/*` must share one version.
-   `npm install --save-exact @docusaurus/core@X @docusaurus/preset-classic@X` plus the dev packages (`module-type-aliases`, `tsconfig`, `types`).
-3. Read the Docusaurus release notes and the `future.v4` flags in `docusaurus.config.ts`.
-4. Run `npm run check` and `npm run audit`, then review visual diffs with `npm run test:visual` against the previous baseline.
-5. Overrides in `package.json` retain only `tinypool` and `serialize-javascript` security upgrades beyond upstream major ranges. Remove each once upstream adopts a patched compatible release. Verify SSG workers and production minification, not just type checking.
-
-### TypeScript and editors
-
-TypeScript 7 uses the native compiler. `tsconfig.json` explicitly mirrors Docusaurus 3.10's supported options without inheriting its removed `baseUrl`, and defines `@site/*` relative to the repository. A `null` reset works in `tsc` but breaks Playwright's config parser. Restore `extends: "@docusaurus/tsconfig"` once upstream removes `baseUrl` and validates with TypeScript 7. Docusaurus handles transpilation; no TypeScript 6 compatibility API package is needed by this site's current pipeline.
-
-Use a TypeScript-7-capable editor/language server. Microsoft's [TypeScript 7 release guidance](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/) describes the VS Code TypeScript 7 extension and native language service. Older extensions that embed the JavaScript compiler API may need their own upgrade; pointing an old `typescript.tsdk` setting at the native package is not sufficient. Interactive editor behavior has not been validated here.
-
-Known residual advisory: `picomatch` ≤ 4.0.7 (high, ReDoS) has no published fix; build-time only. See `MODERNIZATION_REPORT.md`.
-
----
-
-## Repository Structure
-
-```
-blog/          Blog posts (+ authors.yml, tags.yml)
-docs/          Guides, grouped by folder (sidebar is autogenerated)
-src/pages/     Standalone pages: /PrivacyPolicy, /TermsOfUse, /Policies, home
-src/components Shared React components
-src/css/       Global styles (custom.css)
-static/        Files served as-is (img/, favicon)
-e2e/           Playwright tests
-.github/       CI workflow
+```sh
+nvm install
+nvm use
+npm install --global npm@12.2.3
+npm ci
+npm start
 ```
 
-Typical structure follows standard Docusaurus conventions.
+Open `http://localhost:3000`. The site reloads as you edit.
 
----
-
-## Deployment
-
-Target: **Cloudflare Pages**, custom domain `kumacommunity.com`. Cloudflare Pages is **not yet configured** for this repository; these are the build settings to use when setting it up:
-
-| Setting | Value |
+| Directory | Contents |
 |---|---|
-| Framework preset | Docusaurus (or None) |
-| Production branch | `main` |
-| Build command | `npm install --global npm@12.2.3 && npm ci && npm run build` |
-| Build output directory | `build` |
-| Node.js version | `26.13.1`: set `NODE_VERSION=26.13.1` explicitly for production **and preview** builds; keep aligned with `.nvmrc` |
-| Dependency installation | Set `SKIP_DEPENDENCY_INSTALL=1` for production and preview; build command installs pinned npm before `npm ci` |
-| Build image | Use the current v3 build image; review [Cloudflare build image requirements](https://developers.cloudflare.com/pages/configuration/build-image/) |
-| Root directory | `/` |
+| `docs/` | Guides and reference articles |
+| `blog/` | Blog posts, authors, and tags |
+| `src/` | React components, standalone pages, and styles |
+| `static/` | Images and other files served as-is |
+| `e2e/` | Playwright tests |
 
-Cloudflare documents explicit `NODE_VERSION` selection, `.nvmrc` support, and skipping automatic dependency installation. The v3 npm version normally follows Node; use the custom install command above rather than relying on the legacy v1 `NPM_VERSION` setting. These settings are requirements, not a claim that a remote Pages build has run. If an account's build image cannot install Node 26, update the image/settings rather than silently falling back to its default runtime.
+## Checking changes
 
-The site is configured for root-domain hosting (`baseUrl: '/'`, `url: 'https://kumacommunity.com'`). The build fails if any internal link is broken.
+Install Chromium once with `npx playwright install chromium`. Then run `npm run check` to check TypeScript, build the site, and run the browser tests. To preview the production build locally, run `npm run serve`.
 
-Deployment is not automated from this repository. Nothing here changes DNS or account settings.
+Keep the `@docusaurus/*` packages on the same version when upgrading. See the [modernization report](./MODERNIZATION_REPORT.md) for details on the TypeScript configuration and dependency overrides.
+
+## Contributing
+
+Pull requests are currently closed. To suggest a code change, report an error, or propose an article, follow the email instructions on the site’s Contributing page. For a bug, include steps to reproduce it. For an article, send a short outline and any sources you plan to use.
+
+## License
+
+The site source is licensed under the [GNU General Public License v3.0](./LICENSE).
