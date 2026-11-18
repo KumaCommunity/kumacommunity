@@ -22,11 +22,12 @@ This site exists to solve problems that video alone does not:
 
 ## Requirements
 
-- **Node.js 24 LTS** (see `.nvmrc`; `engines` requires `>=24`)
-- **npm** (the lockfile is `package-lock.json`; do not use another package manager)
+- **Node.js 26 LTS** preferred (`.nvmrc` pins `26.13.1`). Node 24 remains supported; minimum `24.15.0` (npm 12 requirement). Supported range: `^24.15.0 || >=26.0.0`; CI tests Node 24 and 26.
+- **npm 12.2.3** (`packageManager` pin; lockfile is `package-lock.json`). Do not use another package manager.
 
 ```bash
 nvm use            # or: fnm use / volta run, reads .nvmrc
+npm install --global npm@12.2.3
 npm ci             # install exactly what is in package-lock.json
 ```
 
@@ -39,7 +40,7 @@ npm ci             # install exactly what is in package-lock.json
 | `npm start` | Dev server with hot reload at http://localhost:3000 |
 | `npm run build` | Production build into `build/` (fails on broken links) |
 | `npm run serve` | Serve the existing `build/` locally |
-| `npm run typecheck` | TypeScript check (`tsc`) |
+| `npm run typecheck` | Native TypeScript 7.0.2 check (`tsc`, no emit) |
 | `npm run test:e2e` | Build, then run Playwright smoke tests |
 | `npm run test:visual` | Build, then run pixel comparisons (opt-in, see below) |
 | `npm run check` | Typecheck + build + smoke tests (what CI runs) |
@@ -63,7 +64,13 @@ First-time Playwright setup on a machine: `npx playwright install chromium`.
    `npm install --save-exact @docusaurus/core@X @docusaurus/preset-classic@X` plus the dev packages (`module-type-aliases`, `tsconfig`, `types`).
 3. Read the Docusaurus release notes and the `future.v4` flags in `docusaurus.config.ts`.
 4. Run `npm run check` and `npm run audit`, then review visual diffs with `npm run test:visual` against the previous baseline.
-5. Overrides in `package.json` (`overrides`) pin patched transitive packages. Remove an override once the parent package releases a fixed version.
+5. Overrides in `package.json` retain only `tinypool` and `serialize-javascript` security upgrades beyond upstream major ranges. Remove each once upstream adopts a patched compatible release. Verify SSG workers and production minification, not just type checking.
+
+### TypeScript and editors
+
+TypeScript 7 uses the native compiler. `tsconfig.json` explicitly mirrors Docusaurus 3.10's supported options without inheriting its removed `baseUrl`, and defines `@site/*` relative to the repository. A `null` reset works in `tsc` but breaks Playwright's config parser. Restore `extends: "@docusaurus/tsconfig"` once upstream removes `baseUrl` and validates with TypeScript 7. Docusaurus handles transpilation; no TypeScript 6 compatibility API package is needed by this site's current pipeline.
+
+Use a TypeScript-7-capable editor/language server. Microsoft's [TypeScript 7 release guidance](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/) describes the VS Code TypeScript 7 extension and native language service. Older extensions that embed the JavaScript compiler API may need their own upgrade; pointing an old `typescript.tsdk` setting at the native package is not sufficient. Interactive editor behavior has not been validated here.
 
 Known residual advisory: `picomatch` ≤ 4.0.7 (high, ReDoS) has no published fix; build-time only. See `MODERNIZATION_REPORT.md`.
 
@@ -94,10 +101,14 @@ Target: **Cloudflare Pages**, custom domain `kumacommunity.com`. Cloudflare Page
 |---|---|
 | Framework preset | Docusaurus (or None) |
 | Production branch | `main` |
-| Build command | `npm run build` |
+| Build command | `npm install --global npm@12.2.3 && npm ci && npm run build` |
 | Build output directory | `build` |
-| Node.js version | 24 (set `NODE_VERSION=24` if the build image defaults to an older version; or rely on `.nvmrc`) |
+| Node.js version | `26.13.1`: set `NODE_VERSION=26.13.1` explicitly for production **and preview** builds; keep aligned with `.nvmrc` |
+| Dependency installation | Set `SKIP_DEPENDENCY_INSTALL=1` for production and preview; build command installs pinned npm before `npm ci` |
+| Build image | Use the current v3 build image; review [Cloudflare build image requirements](https://developers.cloudflare.com/pages/configuration/build-image/) |
 | Root directory | `/` |
+
+Cloudflare documents explicit `NODE_VERSION` selection, `.nvmrc` support, and skipping automatic dependency installation. The v3 npm version normally follows Node; use the custom install command above rather than relying on the legacy v1 `NPM_VERSION` setting. These settings are requirements, not a claim that a remote Pages build has run. If an account's build image cannot install Node 26, update the image/settings rather than silently falling back to its default runtime.
 
 The site is configured for root-domain hosting (`baseUrl: '/'`, `url: 'https://kumacommunity.com'`). The build fails if any internal link is broken.
 
