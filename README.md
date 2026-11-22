@@ -30,12 +30,52 @@ Open `http://localhost:3000`. The site reloads as you edit.
 ## Checking changes
 
 Install Chromium once with `npx playwright install chromium`. Then run
-`npm run check` to check TypeScript, build the site, and run the browser tests.
-To preview the production build locally, run `npm run serve`.
+`npm run check` to check TypeScript, build the site, and run the Playwright
+tests. Run `npm run test:licensing` for the isolated licensing fixtures. To
+preview the production build locally, run `npm run serve`.
 
-Keep the `@docusaurus/*` packages on the same version when upgrading. See the
-[modernization report](./MODERNIZATION_REPORT.md) for details on the TypeScript
-configuration and dependency overrides.
+Playwright has two projects. Specs named `*.unit.spec.ts` test Node.js code
+without a browser (`unit` project). All other specs run in Chromium against the
+static build. Name new Node-only specs `*.unit.spec.ts`.
+
+Keep the `@docusaurus/*` packages on the same version when upgrading.
+
+## Continuous integration
+
+`.github/workflows/ci.yml` validates pull requests and pushes to `main`. It
+only validates; it has read-only repository access and no deployment
+credentials.
+
+| Job | What it runs |
+| --- | --- |
+| Site (Node from `.nvmrc`) | `npm ci`, typecheck, production build (fails on broken links), unit and Chromium tests, isolated licensing fixtures |
+| Node 24 compatibility | `npm ci`, typecheck, production build, unit tests |
+| Dependency audit | Fails on critical `npm audit` findings; summarizes every severity for all and production-only dependencies |
+
+The browser suite runs once, on the production Node version. It tests static
+HTML, which does not depend on the Node version; Node 24 and 26 builds were
+byte-identical when this was set up. Both jobs install the npm version named in
+`package.json` `packageManager`.
+
+When a run fails, its job summary lists each failing test with its location and
+error, and failing lines are annotated in the pull request. The
+`playwright-report-*` artifact (kept 14 days, uploaded only on failure) holds
+HTML reports, screenshots and traces. Open a trace with
+`npx playwright show-trace <trace.zip>`.
+
+Actions are pinned to commit SHAs. Dependabot proposes monthly action updates
+(`.github/dependabot.yml`). npm security updates and CodeQL use GitHub's default
+setup in repository settings.
+
+Visual regression and axe scans are opt-in and do not run in CI. Visual
+baselines are machine-specific and not committed, and axe is external tooling.
+
+## Deployment
+
+Cloudflare Workers Builds deploys the site through its own Git integration,
+configured in the Cloudflare dashboard. GitHub Actions does not deploy. A push
+to `main` is deployed by Cloudflare whether or not CI passes, so merge only
+after CI succeeds.
 
 ## Homepage content
 
@@ -45,10 +85,10 @@ remote fonts are used. Typography uses system sans/serif/monospace fallbacks
 because approved font files and licenses were not supplied. The original logo is
 unchanged.
 
-The initial library has no completed educational guides or real blog posts.
-Topic, starter-guide and recent-publication sections therefore stay hidden.
-Empty documents and the unlisted Docusaurus starter blog post retain their
-existing URLs.
+Published guides exist, but none has editorial approval (`homepage: true`) yet,
+so the topic, starter-guide and recent-publication sections stay hidden. The
+blog has no posts; `/blog` renders an empty archive. The Docusaurus starter post
+was removed, and `/blog/welcome` now returns 404.
 
 To publish content for homepage discovery:
 
@@ -68,8 +108,8 @@ To publish content for homepage discovery:
 4. Add or change topic entries and curated document IDs in
    `src/data/homepage.ts`. References must match existing Docusaurus document
    IDs, including case and spaces. Missing IDs fail the build; existing
-   ineligible references stay hidden. Pending PACE planning and storage-safety
-   entries are already configured. New categories need only a typed entry and a
+   ineligible references stay hidden. The PACE Plan and Safe Storage guides
+   are already configured. New categories need only a typed entry and a
    supported local icon, not component changes. Homepage titles, descriptions
    and public URLs come from Docusaurus metadata, not duplicated card copy.
 5. Run `npm run check`. Data tests cover eligibility, dates, sorting, required
@@ -97,7 +137,7 @@ KUMA_AXE_SOURCE="$TOOLS/node_modules/axe-core/axe.min.js" \
 KUMA_AXE_REPORT_DIR=/tmp/kuma-axe-reports npm run check
 ```
 
-`e2e/axe.spec.ts` scans eight routes at 320px and 1440px in both themes, plus
+`e2e/axe.spec.ts` scans nine routes at 320px and 1440px in both themes, plus
 the open mobile navigation in both themes. It checks WCAG 2.0/2.1/2.2 A/AA tags
 supported by axe and best practices. Every reported violation fails the test;
 full JSON reports retain `incomplete` results for manual review. These opt-in
@@ -105,9 +145,6 @@ tests skip when `KUMA_AXE_SOURCE` is unset. The empty blog archive has a minimal
 accessible heading; populated archives retain the original Docusaurus component.
 Automated scans do not prove full accessibility conformance or replace
 screen-reader testing.
-
-See `HOMEPAGE_REDESIGN_PROGRESS.md` for phase checkpoints and verification
-details. No Cloudflare runtime services or deployment settings changed.
 
 ## Contributing
 
