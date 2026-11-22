@@ -62,7 +62,12 @@ try {
   if (!ready) throw new Error(`Fixture server not ready at ${url}: ${readinessError}`);
   await run(process.execPath, [join(root, 'node_modules/@playwright/test/cli.js'),
     'test', 'e2e/licensing-fixtures.spec.ts', ...process.argv.slice(2)], {
-    env: {...process.env, BASE_URL: url, KUMA_LICENSE_FIXTURES: '1'},
+    env: {
+      ...process.env,
+      BASE_URL: url,
+      KUMA_LICENSE_FIXTURES: '1',
+      KUMA_TEST_SUITE: process.env.KUMA_TEST_SUITE ?? 'licensing-fixtures',
+    },
   });
 } finally {
   if (server?.pid && server.exitCode === null) {
