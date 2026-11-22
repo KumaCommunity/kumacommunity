@@ -7,7 +7,11 @@ import {join, relative} from 'node:path';
 const reportDir = process.argv[2] ?? 'playwright-report';
 const target = process.env.GITHUB_STEP_SUMMARY;
 const ansi = /\u001b\[[0-9;]*m/g;
-const escape = (text) => String(text).replace(/\|/g, '\\|').replace(/\r?\n/g, ' ');
+// Markdown table cell: escape backslashes first, then pipes, then flatten lines.
+const escape = (text) => String(text)
+  .replace(/\\/g, '\\\\')
+  .replace(/\|/g, '\\|')
+  .replace(/\r?\n/g, ' ');
 
 function* specs(suite, titles = []) {
   const path = suite.title ? [...titles, suite.title] : titles;
