@@ -31,11 +31,11 @@ export const topics: readonly TopicConfig[] = [
     title: 'Safety & Security',
     description: 'Personal safety and home security.',
     icon: 'book',
-    docId: 'Firearms/Firearm Safety/Storage Safety',
+    docId: 'Firearms/Firearm Safety/Safe Storage',
   },
 ];
 // Pending selections: automatically shown only after editorial eligibility.
 export const featuredDocIds = [
   'Emergency Planning/PACE Plan',
-  'Firearms/Firearm Safety/Storage Safety',
+  'Firearms/Firearm Safety/Safe Storage',
 ] as const;

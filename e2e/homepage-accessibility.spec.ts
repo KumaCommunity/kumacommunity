@@ -33,12 +33,20 @@ for (const scheme of ['light', 'dark'] as const) {
     for (const result of results) expect(result.contrast, result.text).toBeGreaterThanOrEqual(result.required);
   });
 
+  // The blog has no posts; its empty archive is the shared blog surface.
   test(`shared docs and blog surfaces ${scheme}`, async ({page}) => {
     await page.setViewportSize({width: 1440, height: 900});
     await page.emulateMedia({colorScheme: scheme});
-    for (const [name, path] of [['docs', '/docs/intro'], ['blog', '/blog/welcome']] as const) {
-      await page.goto(path);
-      await expect(page.locator('article h1')).toBeVisible();
+    for (const [name, path, heading] of [
+      ['docs', '/docs/intro', 'Welcome'],
+      ['guide', '/docs/Emergency%20Planning/PACE%20Plan', 'PACE Plan'],
+      ['blog', '/blog', 'Blog'],
+    ] as const) {
+      const response = await page.goto(path);
+      expect(response?.status(), path).toBe(200);
+      await expect(page.locator('html')).toHaveAttribute('data-theme', scheme);
+      await expect(page.getByRole('main').getByRole('heading', {level: 1})).toHaveText(heading);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth), path).toBe(0);
       if (process.env.KUMA_CAPTURE_DIR) {
         await page.screenshot({path: `${process.env.KUMA_CAPTURE_DIR}/${name}-1440-${scheme}.png`, fullPage: true});
       }

@@ -39,12 +39,18 @@ async function scan(page: Page, name: string) {
   expect(results.violations.map(({id, impact, help, nodes}) => ({id, impact, help, nodes}))).toEqual([]);
 }
 
-const routes = [
+const routes = process.env.KUMA_LICENSE_FIXTURES ? [
+  ['educational-doc', '/docs/license-fixture'],
+  ['educational-blog', '/blog/license-fixture'],
+  ['alternate-license', '/docs/license-alternate'],
+  ['rights-notice', '/blog/license-rights'],
+] as const : [
   ['home', '/'],
   ['welcome', '/docs/intro'],
   ['contributing', '/docs/Contributing%20Guide'],
+  ['guide', '/docs/Emergency%20Planning/PACE%20Plan'],
   ['blog-index', '/blog'],
-  ['blog-post', '/blog/welcome'],
+  ['licensing', '/licensing'],
   ['privacy', '/PrivacyPolicy'],
   ['terms', '/TermsOfUse'],
   ['policies', '/Policies'],

@@ -24,3 +24,6 @@ yarn-error.log*
 /playwright-report
 /blob-report
 /e2e/__snapshots__
+
+# Wrangler local state
+/.wrangler

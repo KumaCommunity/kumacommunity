@@ -1,0 +1,14 @@
+# Keeps SHA-pinned GitHub Actions current. npm security updates remain enabled
+# in repository settings; npm version updates are intentionally not configured.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    # Wait before proposing new releases, limiting exposure to compromised tags.
+    cooldown:
+      default-days: 7
+    groups:
+      github-actions:
+        patterns: ['*']

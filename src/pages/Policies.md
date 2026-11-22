@@ -2,38 +2,55 @@
 title: Policies
 ---
 
-# Educational Use and Scope Statement
+# Educational Use and Scope
 
-This website exists to explore ideas, systems, technologies, and historical or hypothetical scenarios at a conceptual level.
+Kuma Community publishes educational material on preparedness, personal safety,
+technology, communications, and related subjects. Content may include
+explanations, practical guides, checklists, product comparisons, and examples.
 
-The focus is on:
+The material is intended to help readers understand their options and make
+informed decisions. It is not a substitute for assessing the conditions, laws,
+equipment, and risks involved in a particular situation. Readers should verify
+information before relying on it, especially where safety or legal compliance is
+involved.
 
-- Understanding systems and tradeoffs
+The inclusion of a procedure or example does not mean it is suitable for every
+person or circumstance. Refer to the [Terms of Use](/TermsOfUse) for additional
+limitations and disclaimers.
 
-- Evaluating risks, constraints, and design decisions
+## Independence and Endorsements
 
-- Encouraging critical thinking rather than prescribing actions
+Unless expressly stated, Kuma Community is not affiliated with, sponsored by, or
+endorsed by any company, organization, or manufacturer discussed on this site.
 
-The site does not provide step-by-step guides, operational procedures, or real-world execution instructions. Discussion of tools, technology, preparedness concepts, or infrastructure is informational only and should not be treated as a checklist or directive.
+References to products, services, and organizations are provided for information
+and comparison. A favorable assessment does not imply a commercial relationship,
+and a reference to a third party does not imply that the third party endorses
+this project.
 
-Purchasing equipment, tools, or supplies is not presented as a solution to personal, social, or systemic problems. Material acquisition does not substitute for judgment, resilience, community, or well-being.
+Kuma Community does not currently accept payment for sponsored coverage or
+favorable placement. If this practice changes, relevant disclosures and this
+policy will be updated.
 
-**Readers are expected to exercise independent judgment and personal responsibility.**
+Trademarks and brand names belong to their respective owners.
 
-# No Affiliation and No Endorsement Notice
+## External Links
 
-Unless explicitly stated, this website is not affiliated with, endorsed by, sponsored by, or partnered with any company, manufacturer, organization, or brand mentioned.
+This site may link to third-party websites, documents, and other resources.
+Those resources are maintained by their respective operators and may change
+without notice.
 
-References to products, services, technologies, or organizations are made solely for educational, analytical, or contextual purposes and should not be interpreted as endorsements or recommendations.
+Kuma Community cannot guarantee the accuracy, availability, security, or privacy
+practices of external resources. A link does not, by itself, indicate
+endorsement of the linked content.
 
-All trademarks, product names, and brand names remain the property of their respective owners.
+Review the applicable terms and privacy information before using third-party
+services or sharing information with them.
 
-This site does not accept compensation, sponsorships, or paid placement in exchange for coverage or favorable treatment.
+## Licensing
 
-# External Links Notice
-
-This website may reference or link to external websites or third-party resources for additional context or information.
-
-The site owner has no control over external content and is not responsible for the accuracy, availability, policies, or viewpoints of third-party sites. Linking does not imply endorsement or agreement.
-
-Visitors access external resources at their own discretion.
+Website source code and code examples retain their GPLv3 license. Unless
+otherwise noted, original educational content is available under CC BY-SA 4.0.
+Branding is excluded from both grants, and third-party material retains its own
+terms. See the [licensing scope and reuse guidance](/licensing) before reusing
+material.

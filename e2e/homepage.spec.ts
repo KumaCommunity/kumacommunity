@@ -1,5 +1,6 @@
 import {expect, test} from '@playwright/test';
 import {readFileSync} from 'node:fs';
+import {pathToFileURL} from 'node:url';
 import type {HomepageData} from '../src/data/homepage';
 
 const headline = 'Building a more resilient community.';
@@ -43,7 +44,7 @@ test('approved copy, semantic structure and content-dependent omission', async (
   await expect(contribute.getByRole('link', {name: 'Contribution guidelines', exact: true})).toHaveAttribute('href', '/docs/Contributing Guide');
   await expect(contribute.getByRole('link', {name: 'GitHub', exact: true})).toHaveAttribute('href', 'https://github.com/KumaCommunity/kumacommunity');
   await expect(page.getByRole('link', {name: /^(Report an error|Suggest content)$/})).toHaveCount(0);
-  for (const [title, copy] of [['Accessible', 'Education without barriers'], ['Practical', 'Real world applications'], ['Independence', 'Built on open standards']]) {
+  for (const [title, copy] of [['Accessible', 'Education without barriers'], ['Practical', 'Real world applications'], ['Independent', 'Built on open standards']]) {
     await expect(page.getByRole('heading', {name: title, exact: true})).toBeVisible();
     await expect(page.getByText(copy, {exact: true})).toBeVisible();
   }
@@ -78,9 +79,15 @@ test('static HTML contains copy, canonical and social metadata without JavaScrip
   const page = await context.newPage();
   await page.goto('/');
   await expect(page.getByRole('heading', {level: 1})).toHaveText(headline);
-  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', 'https://kumacommunity.com/');
+  // Canonical host comes from docusaurus.config.ts `url`, read from the build
+  // output so a deliberate host change needs no test edit. It must still be a
+  // production https URL on the project's domain.
+  const configFile = pathToFileURL(`${process.cwd()}/.docusaurus/docusaurus.config.mjs`).href;
+  const {url: siteUrl} = (await import(configFile)).default as {url: string};
+  expect(siteUrl).toMatch(/^https:\/\/(?:www\.)?kumacommunity\.com$/);
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', `${siteUrl}/`);
   await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', description);
-  await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', 'https://kumacommunity.com/img/logo.png');
+  await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', `${siteUrl}/img/logo.png`);
   await context.close();
 });
 
