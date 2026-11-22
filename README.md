@@ -65,6 +65,23 @@ See `HOMEPAGE_REDESIGN_PROGRESS.md` for phase checkpoints and verification detai
 
 Pull requests are currently closed. To suggest a code change, report an error, or propose an article, follow the email instructions on the site’s Contributing page. For a bug, include steps to reproduce it. For an article, send a short outline and any sources you plan to use.
 
-## License
+## Licensing
 
-The site source is licensed under the [GNU General Public License v3.0](./LICENSE).
+Software and educational content have separate licenses. File location alone does not determine an asset's license.
+
+| Material | License |
+| --- | --- |
+| Website source code, components, tooling, scripts, and code examples, including examples within articles | Existing [GPLv3 grant](./LICENSE), version 3 or any later version (`GPL-3.0-or-later`), unless specifically licensed otherwise |
+| Original educational articles, documentation, checklists, diagrams, illustrations, infographics, videos, and tutorials that Kuma Community is authorized to license | [CC BY-SA 4.0](./LICENSE-CONTENT.md) (`CC-BY-SA-4.0`), unless otherwise noted |
+| Kuma Community logos, names, and branding assets | Excluded from both grants; all rights reserved by their respective rights holders |
+| Third-party or separately licensed material | Its own license or permission terms; preserve existing attribution and notices |
+
+The root `LICENSE` is unchanged. See the [official GPLv3 text](https://www.gnu.org/licenses/gpl-3.0.html) and [official CC BY-SA 4.0 terms](https://creativecommons.org/licenses/by-sa/4.0/).
+
+CC BY-SA 4.0 allows commercial reuse and adaptations. Give appropriate credit, retain supplied notices, link to the license, and indicate changes. Shared adaptations, including translations, must use CC BY-SA 4.0 or a license allowed by its ShareAlike terms. Do not add restrictions that the license prohibits. Unrelated works in a collection do not automatically acquire this license. Rights already granted under earlier licenses remain in effect.
+
+See [LICENSE-CONTENT.md](./LICENSE-CONTENT.md) for scope and exclusions, and [ATTRIBUTION.md](./ATTRIBUTION.md) for asset uncertainties, a simple credit checklist, per-article notice metadata, and future video guidance. Do not assign a license to material with uncertain ownership. When proposing content by email, include sources, licenses, attribution, changes, and any permission evidence. Direct pull requests remain closed.
+
+The public `/licensing` page renders `LICENSE-CONTENT.md` as the single source of content-license guidance. Small theme wrappers add a shared notice to nonempty educational docs and full blog articles, not excerpts or standalone application/legal pages. Administrative docs opt out with `content_license: false`; different licenses and rights notices use the existing front-matter mechanism documented in `ATTRIBUTION.md`.
+
+Run `npm run test:licensing` to build a temporary copy with test-only MD/MDX docs and blog posts, then check notices, exceptions, original footer behavior, links, both themes, and mobile layout. Fixtures never enter the production content tree or deployment build. The regular browser suite includes licensing checks for the actual site. `LICENSING_PROGRESS.md` records audit findings and verification.

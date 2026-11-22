@@ -18,4 +18,12 @@ Content is provided “as is” and without warranties of any kind. While care i
 
 This content is not legal, medical, financial, professional, or tactical advice. When appropriate, consult qualified professionals and comply with all applicable laws, safety standards, and ethical considerations.
 
+## Licensing
+
+The website's source code, components, scripts, tooling, and code examples retain the existing [GPLv3 license](https://github.com/KumaCommunity/kumacommunity/blob/main/LICENSE). Unless otherwise noted, original educational articles, documentation, checklists, diagrams, illustrations, infographics, videos, and tutorials that Kuma Community is authorized to license are available under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
+
+CC BY-SA 4.0 permits reuse with attribution and requires shared adaptations to follow its ShareAlike terms. It does not license the source code or override separately licensed material. Kuma Community logos, names, and branding are excluded from both project grants, with all rights reserved by their respective rights holders. Third-party content and assets retain their own rights and notices.
+
+See the [licensing scope and reuse guidance](/licensing) for exclusions and attribution. These Terms do not narrow rights granted by an applicable license, revoke earlier grants, or restrict uses allowed by law.
+
 Use of this website constitutes acceptance of these terms.

@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+content_license: false
 ---
 
 # Contributing
@@ -35,6 +36,8 @@ Send your suggestions to [contact@kumacommunity.com](mailto:contact@kumacommunit
 1. **Content type:** Article, guide, technical reference, correction, or other.
 2. **Description:** What the topic covers, why it's useful, and how it relates to the project.
 3. **Sources:** Links to relevant documentation, research, standards, or other reliable references.
+
+For original educational material, confirm that you have authority to offer it under [CC BY-SA 4.0](/licensing). Identify third-party elements and provide their creators, source URLs, licenses, required credits, changes made, and any permission evidence. Code examples retain the software license unless explicitly licensed otherwise. Flag uncertain rights for review rather than assigning a license. You retain copyright in your contributions.
 
 We prioritize topics with practical civilian applications, supported by reliable sources and consistent with applicable laws. Information that can be reused or adapted to different situations is particularly useful.
 

@@ -37,3 +37,7 @@ This website may reference or link to external websites or third-party resources
 The site owner has no control over external content and is not responsible for the accuracy, availability, policies, or viewpoints of third-party sites. Linking does not imply endorsement or agreement.
 
 Visitors access external resources at their own discretion.
+
+# Licensing
+
+Website source code and code examples retain their GPLv3 license. Unless otherwise noted, original educational content is available under CC BY-SA 4.0. Branding is excluded from both grants, and third-party material retains its own terms. See the [licensing scope and reuse guidance](/licensing) before reusing material.
