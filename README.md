@@ -77,8 +77,9 @@ configured in the Cloudflare dashboard. GitHub Actions does not deploy. A push
 to `main` is deployed by Cloudflare whether or not CI passes, so merge only
 after CI succeeds.
 
-`wrangler.jsonc` serves the static `build/` directory with default Workers asset
-routing. Builds on `main` run `npx wrangler deploy`; builds on other branches
+`wrangler.jsonc` serves the static `build/` directory. Unknown paths return the
+Docusaurus `404.html` page with a 404 status (`not_found_handling: 404-page`).
+Builds on `main` run `npx wrangler deploy`; builds on other branches
 run `npx wrangler preview`, which requires the `previews` block. Keep the
 `previews` block when editing the file.
 

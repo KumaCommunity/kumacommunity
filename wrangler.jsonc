@@ -3,12 +3,14 @@
 // `npx wrangler preview` on other branches. Previews require a `previews`
 // block; without any config file, only production deploys worked (through
 // Wrangler automatic configuration) and every branch preview failed.
-// Asset routing uses Workers defaults, matching the current production site.
 {
   "name": "kumacommunity",
   "compatibility_date": "2026-11-22",
   "assets": {
-    "directory": "./build"
+    "directory": "./build",
+    // Serve Docusaurus build/404.html with a 404 status for unknown paths,
+    // instead of an empty response. Trailing-slash redirects use the default.
+    "not_found_handling": "404-page"
   },
   "observability": {
     "enabled": true
