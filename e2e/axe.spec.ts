@@ -48,6 +48,7 @@ const routes = process.env.KUMA_LICENSE_FIXTURES ? [
   ['home', '/'],
   ['welcome', '/docs/intro'],
   ['contributing', '/docs/Contributing%20Guide'],
+  ['guide', '/docs/Emergency%20Planning/PACE%20Plan'],
   ['blog-index', '/blog'],
   ['licensing', '/licensing'],
   ['privacy', '/PrivacyPolicy'],

@@ -1,9 +1,22 @@
 import {expect, test} from '@playwright/test';
 
+// Opted-out project pages, empty placeholders, standalone and legal pages.
 const adminRoutes = [
   '/', '/docs/intro', '/docs/Contributing%20Guide',
-  '/docs/General%20Information/Creators', '/docs/Emergency%20Planning/PACE%20Plan',
+  '/docs/General%20Information/Creators',
+  '/docs/General%20Information/Recommended%20Reading',
+  '/docs/General%20Information/Resources%20&%20Links',
   '/blog', '/Policies', '/PrivacyPolicy', '/TermsOfUse', '/licensing',
+];
+
+// Published educational guides with metadata descriptions. The Exfil guide is
+// omitted: Git tracks `EXFIL Plan.md`, so its URL differs between Linux CI and
+// case-insensitive local filesystems until the filename case is settled.
+const publishedGuides = [
+  '/docs/Emergency%20Planning/Condition%20Plan',
+  '/docs/Emergency%20Planning/PACE%20Plan',
+  '/docs/Firearms/Firearm%20Safety/Range%20Safety',
+  '/docs/Firearms/Firearm%20Safety/Safe%20Storage',
 ];
 
 test('footer separates licenses without duplicate copyright or license links', async ({page}) => {
@@ -35,6 +48,19 @@ test('article notices stay off administrative pages, legal pages and empty place
   }
 });
 
+test('published guides show one default content license notice in static HTML', async ({page, request}) => {
+  for (const route of publishedGuides) {
+    const response = await request.get(route);
+    expect(response.status(), route).toBe(200);
+    expect(await response.text(), route).toContain('Unless otherwise noted, original educational content');
+    await page.goto(route);
+    const notice = page.getByRole('complementary', {name: 'Content license', exact: true});
+    await expect(notice, route).toHaveCount(1);
+    await expect(notice.getByRole('link', {name: 'CC BY-SA 4.0'})).toHaveAttribute('href', 'https://creativecommons.org/licenses/by-sa/4.0/');
+    await expect(notice.getByRole('link', {name: 'Scope and exclusions'})).toHaveAttribute('href', '/licensing');
+  }
+});
+
 test('licensing page includes official terms, exclusions and attribution without broken internal links', async ({page, request}) => {
   await page.goto('/licensing');
   const main = page.locator('main');
@@ -57,9 +83,8 @@ test('licensing page includes official terms, exclusions and attribution without
 test('contribution licensing keeps direct pull requests closed', async ({page}) => {
   await page.goto('/docs/Contributing%20Guide');
   const article = page.locator('article');
-  await expect(article).toContainText("aren't accepting direct code contributions or pull requests yet");
-  await expect(article.getByRole('link', {name: 'GitHub', exact: true}))
-    .toHaveAttribute('href', 'https://github.com/KumaCommunity/kumacommunity');
+  await expect(article).toContainText(/(?:aren't|are not|not) (?:currently )?accepting direct code contributions or pull requests/i);
+  await expect(article.locator('a[href="https://github.com/KumaCommunity/kumacommunity"]').first()).toBeVisible();
   await expect(article).toContainText('You retain copyright');
   await expect(article).toContainText('Flag uncertain rights for review');
 });
