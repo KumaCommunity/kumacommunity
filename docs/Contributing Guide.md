@@ -4,77 +4,42 @@ sidebar_position: 2
 
 # Contributing
 
-## Current Contribution Policy
+Kuma Community welcomes feedback, corrections, and suggestions for new content. While we aren't accepting direct code contributions or pull requests yet, there are still several ways to help improve the project.
 
-Thank you for your interest in contributing.
+## Contribution Policy
 
-At this time, we are **not accepting direct code contributions or pull requests**. The project is still in its early stages, and we are intentionally maintaining a tight editorial and technical scope to ensure consistency, accuracy, and reliance on trusted, well-documented sources.
+The project is still in its early stages, and we're keeping development and editorial work in-house while we establish consistent standards for content, sources, and code. We plan to open the repository to outside contributions as the project grows.
 
-As the project matures and internal processes stabilize, we plan to open the repository to community pull requests.
-
-The full source code for the site is publicly available:
-
-https://codeberg.org/KumaCommunity/kumacommunity
-
-You are welcome to clone the repository for personal use, local hosting, archival purposes, or offline reference. Any copies, modifications, or distributions of the code must comply with the terms of the **GNU General Public License (GPL)** under which this project is released.
-
----
+Our source code is publicly available on [GitHub](https://github.com/KumaCommunity/kumacommunity). You're welcome to clone the repository for personal use, local hosting, or offline reference. Copying, modifying, and distributing the code is subject to the terms of the [GNU General Public License v3.0](https://github.com/KumaCommunity/kumacommunity/blob/main/LICENSE).
 
 ## Reporting Errors
 
-If you find an error, broken link, formatting issue, or incorrect technical statement, we welcome corrections.
+If you find an error, broken link, formatting issue, or incorrect information, please email [contact@kumacommunity.com](mailto:contact@kumacommunity.com).
 
-Please email:
+Include:
 
-contact@kumacommunity.com
+1. **Page:** A direct link to the page containing the issue.
+2. **Problem:** A description of what's wrong.
+3. **Correction:** Your suggested fix or correction.
 
-Include the following:
+For factual or technical corrections, please include a reliable source when possible. This is especially important for legal references, technical specifications, and historical claims.
 
-1. **Direct link** to the page containing the issue
-2. **Clear description** of the problem
-3. **Proposed correction or fix**
-
-If the correction involves a factual claim, technical specification, legal reference, or historical statement, please include a **credible cited source** supporting the correction.
-
-Submissions without sufficient detail may not be reviewed.
-
----
+Reports without enough information to identify or verify the problem may not be reviewed.
 
 ## Suggesting New Content
 
-If you would like to suggest a topic, provide research, or recommend future articles, please follow a structured format in your email:
+We welcome suggestions for new articles, guides, technical references, and updates to existing material.
 
-1. **Type of content**
-   - Article
-   - Guide
-   - Technical reference
-   - Correction / Update
-   - Other
+Send your suggestions to [contact@kumacommunity.com](mailto:contact@kumacommunity.com) with the following information:
 
-2. **Description**  
-   A concise explanation of the concept, why it is relevant, and how it supports practical, civilian oriented preparedness, technology, or education.
+1. **Content type:** Article, guide, technical reference, correction, or other.
+2. **Description:** What the topic covers, why it's useful, and how it relates to the project.
+3. **Sources:** Links to relevant documentation, research, standards, or other reliable references.
 
-3. **Sources / Resources**  
-   Provide primary sources, documentation links, academic references, or standards bodies where applicable.
+We prioritize topics with practical civilian applications, supported by reliable sources and consistent with applicable laws. Information that can be reused or adapted to different situations is particularly useful.
 
-We prioritize submissions that are:
+## What We Look For
 
-- Practical and systems oriented
-- Legally compliant
-- Durable and reusable
-- Supported by verifiable documentation
+Our content focuses on clear documentation, useful skills, and approaches people can apply to their own circumstances. We prefer open standards, repeatable methods, and solutions that don't depend unnecessarily on specific products or services.
 
----
-
-## General Expectations
-
-This project favors:
-
-- Clear documentation
-- Repeatable processes
-- Open standards and resilient infrastructure
-- Teaching methods rather than promoting products
-
-If your suggestion aligns with those principles, we will review it.
-
-Thank you for helping improve the quality and accuracy of the site.
+Suggestions that fit these priorities are welcome, even if they aren't currently covered by the site.
