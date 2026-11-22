@@ -1,12 +1,13 @@
 import {themes as prismThemes} from 'prism-react-renderer';
 import type {Config} from '@docusaurus/types';
+import {project} from './src/data/project';
 import type * as Preset from '@docusaurus/preset-classic';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 const config: Config = {
   title: 'Kuma Community',
-  tagline: 'Building a resilent community.',
+  tagline: 'Building a more resilient community.',
   favicon: 'img/favicon.ico',
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
@@ -46,6 +47,8 @@ const config: Config = {
     defaultLocale: 'en',
     locales: ['en'],
   },
+
+  plugins: ['./plugins/homepage/index.ts'],
 
   presets: [
     [
@@ -91,14 +94,14 @@ const config: Config = {
           position: 'left',
           label: 'Guides',
         },
-        {to: '/blog', label: 'Blog', position: 'left'},
+        {to: project.about, label: 'About', position: 'left'},
       ],
     },
     footer: {
       style: 'dark',
       links: [
         {
-          title: 'Docs',
+          title: 'Explore',
           items: [
             {
               label: 'Guides',
@@ -107,12 +110,12 @@ const config: Config = {
           ],
         },
         {
-          title: 'More',
+          title: 'Project',
           items: [
-            {
-              label: 'Blog',
-              to: '/blog',
-            },
+            {label: 'About', to: project.about},
+            {label: 'Contributing', to: project.contributing},
+            {label: 'Source code', href: project.source},
+            {label: 'GPL-3.0 license', href: project.license},
           ],
         },
         {
@@ -127,7 +130,7 @@ const config: Config = {
               to: '/TermsOfUse',
             },
             {
-              label: 'Other Polcies',
+              label: 'Other Policies',
               to: '/Policies',
             },
           ],

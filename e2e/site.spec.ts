@@ -24,7 +24,8 @@ test.describe('Homepage', () => {
     await expect(page).toHaveTitle(/Kuma Community/);
     await expect(page.locator('nav.navbar')).toBeVisible();
     await expect(page.locator('nav.navbar').getByRole('link', {name: 'Guides'})).toBeVisible();
-    await expect(page.locator('nav.navbar').getByRole('link', {name: 'Blog'})).toBeVisible();
+    await expect(page.locator('nav.navbar').getByRole('link', {name: 'About'})).toBeVisible();
+    await expect(page.locator('nav.navbar').getByRole('link', {name: 'Blog'})).toHaveCount(0);
     await expect(page.locator('footer')).toBeVisible();
     await expect(page.locator('h1').first()).toBeVisible();
     const logo = page.locator('nav.navbar img').first();
@@ -64,6 +65,13 @@ test.describe('Documentation', () => {
     expect(errors).toEqual([]);
   });
 
+  test('contribution source is GitHub and pull requests remain closed', async ({page}) => {
+    await page.goto('/docs/Contributing%20Guide');
+    await expect(page.locator('article').getByRole('link', {name: 'https://github.com/KumaCommunity/kumacommunity', exact: true})).toHaveAttribute('href', 'https://github.com/KumaCommunity/kumacommunity');
+    await expect(page.locator('article a[href*="codeberg.org"]')).toHaveCount(0);
+    await expect(page.locator('article')).toContainText('not accepting direct code contributions or pull requests');
+  });
+
   test('intro policy link resolves', async ({page}) => {
     await page.goto('/docs/intro');
     await page.locator('article').getByRole('link', {name: 'Policies'}).click();
@@ -78,17 +86,22 @@ test.describe('Documentation', () => {
 });
 
 test.describe('Blog', () => {
-  test('index lists post with truncated excerpt', async ({page}) => {
+  test('empty archive retains one H1 and no starter post links', async ({page}) => {
     await page.goto('/blog');
-    const post = page.locator('article').filter({hasText: 'Welcome'}).first();
-    await expect(post).toBeVisible();
-    await expect(post.getByRole('heading', {name: 'Welcome'}).getByRole('link')).toHaveAttribute(
-      'href',
-      '/blog/welcome',
-    );
-    // Text placed after the truncate marker must not appear on the index.
-    await expect(page.locator('main')).not.toContainText('Simply add Markdown files');
-    await expect(page.locator('main')).toContainText('Here are a few tips you might find useful');
+    await expect(page.locator('main h1')).toHaveText('Blog');
+    await expect(page.locator('a[href="/blog/welcome"]')).toHaveCount(0);
+    await expect(page.locator('main')).toHaveCount(1);
+  });
+
+  test('starter post excluded from public discovery', async ({page, request}) => {
+    await page.goto('/');
+    await expect(page.locator('a[href="/blog"]')).toHaveCount(0);
+    const sitemap = await request.get('/sitemap.xml');
+    expect(await sitemap.text()).not.toContain('/blog/welcome');
+    for (const path of ['/blog/rss.xml', '/blog/atom.xml']) {
+      const response = await request.get(path);
+      if (response.ok()) expect(await response.text()).not.toContain('/blog/welcome');
+    }
   });
 
   test('post renders with metadata, tags and no errors', async ({page}) => {
@@ -101,24 +114,9 @@ test.describe('Blog', () => {
     expect(errors).toEqual([]);
   });
 
-  test('tag page filters posts', async ({page}) => {
-    await page.goto('/blog/tags/hello');
-    await expect(page.locator('h1').first()).toBeVisible();
-    await expect(page.locator('main')).toContainText('Welcome');
-  });
-
-  test('archive and author pages load', async ({page}) => {
-    for (const path of ['/blog/archive', '/blog/authors', '/blog/authors/kumacollective']) {
-      await page.goto(path);
-      await expect(page.locator('h1').first()).toBeVisible();
-    }
-  });
-
-  test('feeds exist', async ({request}) => {
-    for (const path of ['/blog/rss.xml', '/blog/atom.xml']) {
-      const res = await request.get(path);
-      expect(res.status(), path).toBe(200);
-    }
+  test('unlisted post retains URL and has noindex metadata', async ({page}) => {
+    await page.goto('/blog/welcome');
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/);
   });
 });
 
@@ -179,7 +177,7 @@ test.describe('Accessibility and interaction', () => {
     const bg = await page.evaluate(() =>
       getComputedStyle(document.documentElement).getPropertyValue('--ifm-background-color'),
     );
-    expect(bg.trim()).toBe('#121212');
+    expect(bg.trim()).toBe('#1c231f');
   });
 });
 

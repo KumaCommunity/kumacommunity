@@ -1,0 +1,100 @@
+.hero {
+  position: relative;
+  background: var(--kuma-hero);
+  color: var(--kuma-hero-text);
+  --kuma-focus: #edc28b;
+  overflow: hidden;
+}
+
+/* Quiet technical grid, confined to the right edge, never behind the copy. */
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: 0 0 0 72%;
+  background-image: linear-gradient(var(--kuma-grid) 1px, transparent 1px), linear-gradient(90deg, var(--kuma-grid) 1px, transparent 1px);
+  background-size: 3rem 3rem;
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.heroInner {
+  position: relative;
+  z-index: 1;
+  padding-block: clamp(2.5rem, 4vw, 3.5rem);
+}
+
+.hero h1 {
+  max-width: 20ch;
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  font-weight: 500;
+  line-height: 1.08;
+  letter-spacing: -0.04em;
+  margin-bottom: 1.5rem;
+}
+
+.heroDescription {
+  max-width: 56ch;
+  font-size: clamp(1.05rem, 1.5vw, 1.2rem);
+  color: var(--kuma-hero-muted);
+  margin-bottom: 2rem;
+}
+
+.actions { display: flex; flex-wrap: wrap; gap: 1rem 1.75rem; align-items: center; }
+.primaryAction, .secondaryAction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  min-height: 48px;
+  padding: 0.65rem 1rem;
+  font-weight: 600;
+}
+.primaryAction { color: var(--kuma-hero); background: var(--kuma-hero-text); border: 1px solid var(--kuma-hero-text); }
+.primaryAction:hover { color: var(--kuma-hero); text-decoration: underline; }
+.secondaryAction { color: var(--kuma-hero-text); padding-inline: 0; }
+.secondaryAction:hover { color: var(--kuma-hero-text); }
+
+.section { padding-block: var(--kuma-section-space); }
+.section + .section { border-top: 1px solid var(--kuma-border); }
+.section h2 { font-size: clamp(1.9rem, 3vw, 2.6rem); font-weight: 500; margin-bottom: 2rem; }
+.section h3 { font-size: 1.4rem; }
+.icon { width: 2rem; height: 2rem; flex-shrink: 0; color: var(--ifm-color-primary); }
+.principles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2rem; }
+.principle .icon { margin-bottom: 1rem; }
+.principle h3 { margin-bottom: 0.5rem; }
+.principle p { color: var(--kuma-muted); margin: 0; }
+.contribute { display: grid; grid-template-columns: 1fr 1.6fr; gap: 2rem 4rem; }
+.contribute h2 { margin-bottom: 0; }
+.contribute p { max-width: 65ch; }
+.projectLinks { display: flex; flex-wrap: wrap; gap: 0.5rem 2rem; }
+.projectLinks a { display: inline-flex; align-items: center; min-height: 44px; gap: 1rem; text-decoration: underline; text-underline-offset: 4px; }
+.topicGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+.topic { display: block; position: relative; padding: 1.5rem; border: 1px solid var(--kuma-border); background: var(--kuma-surface); color: var(--ifm-font-color-base); }
+.topic:hover { color: var(--ifm-font-color-base); text-decoration: none; border-color: var(--ifm-color-primary); }
+.topic:hover h3 { text-decoration: underline; }
+.topic .icon { margin-bottom: 1rem; }
+.topic p, .readingItem p { margin-bottom: 0; color: var(--kuma-muted); }
+.topic > span { display: block; margin-top: 1rem; color: var(--ifm-color-primary); }
+.readingItem { display: grid; grid-template-columns: 9rem 1fr auto; align-items: baseline; gap: 1.5rem; padding-block: 1.5rem; border-top: 1px solid var(--kuma-border); color: var(--ifm-font-color-base); }
+.readingItem:hover { text-decoration: none; color: var(--ifm-font-color-base); }
+.readingItem:hover h3 { text-decoration: underline; }
+.readingItem h3 { margin-bottom: 0.5rem; }
+.itemMeta { font-family: var(--ifm-font-family-monospace); font-size: 0.8rem; color: var(--kuma-muted); }
+.itemMeta time { display: block; }
+.topic, .readingItem, .contribute, .principle, .heroInner { overflow-wrap: anywhere; }
+.actions > a { max-width: 100%; }
+.actions > a > span { flex-shrink: 0; }
+
+@media (max-width: 996px) {
+  .topicGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .hero::after { inset-inline-start: 85%; }
+}
+@media (max-width: 600px) {
+  .hero::after { display: none; }
+  .principles, .topicGrid, .contribute { grid-template-columns: minmax(0, 1fr); }
+  .principles { gap: 2rem; }
+  .principle { display: grid; grid-template-columns: 2rem minmax(0, 1fr); column-gap: 1rem; }
+  .principle .icon { grid-row: span 2; }
+  .readingItem { grid-template-columns: 1fr auto; gap: 0.5rem; }
+  .itemMeta { grid-column: 1 / -1; }
+}
