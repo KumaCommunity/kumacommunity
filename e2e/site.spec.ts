@@ -67,9 +67,9 @@ test.describe('Documentation', () => {
 
   test('contribution source is GitHub and pull requests remain closed', async ({page}) => {
     await page.goto('/docs/Contributing%20Guide');
-    await expect(page.locator('article').getByRole('link', {name: 'https://github.com/KumaCommunity/kumacommunity', exact: true})).toHaveAttribute('href', 'https://github.com/KumaCommunity/kumacommunity');
+    await expect(page.locator('article').getByRole('link', {name: 'GitHub', exact: true})).toHaveAttribute('href', 'https://github.com/KumaCommunity/kumacommunity');
     await expect(page.locator('article a[href*="codeberg.org"]')).toHaveCount(0);
-    await expect(page.locator('article')).toContainText('not accepting direct code contributions or pull requests');
+    await expect(page.locator('article')).toContainText("aren't accepting direct code contributions or pull requests yet");
   });
 
   test('intro policy link resolves', async ({page}) => {
