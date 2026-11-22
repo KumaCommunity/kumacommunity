@@ -11,6 +11,6 @@ content_license:
 
 A rights notice replaces a blanket license on this unlisted article.
 
-{/* truncate */}
+{/*truncate*/}
 
 Unlisted articles still retain their individual rights notices.

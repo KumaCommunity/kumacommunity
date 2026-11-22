@@ -8,6 +8,6 @@ content_license: false
 
 Non-educational test content.
 
-{/* truncate */}
+{/*truncate*/}
 
 No licensing notice.

@@ -12,6 +12,6 @@ content_license:
 
 Alternative license blog content.
 
-{/* truncate */}
+{/*truncate*/}
 
 The article continues.

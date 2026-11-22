@@ -4,9 +4,12 @@ content_license: false
 
 # Recommended Creators and Resources
 
-This page is a curated list of creators and organizations whose work is consistently useful, well-reasoned, and worth following.
+This page is a curated list of creators and organizations whose work is
+consistently useful, well-reasoned, and worth following.
 
-Inclusion here does not imply endorsement of every position or product. This list exists to surface **high-signal sources** across education, preparedness, technology, and adjacent domains.
+Inclusion here does not imply endorsement of every position or product. This
+list exists to surface **high-signal sources** across education, preparedness,
+technology, and adjacent domains.
 
 ---
 
