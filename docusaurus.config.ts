@@ -115,7 +115,8 @@ const config: Config = {
             {label: 'About', to: project.about},
             {label: 'Contributing', to: project.contributing},
             {label: 'Source code', href: project.source},
-            {label: 'GPL-3.0 license', href: project.license},
+            {label: 'GPLv3 (Source Code)', href: project.license},
+            {label: 'CC BY-SA 4.0 (Content)', to: '/licensing'},
           ],
         },
         {
@@ -136,7 +137,7 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Cybear Technologies LLC DBA Kuma Community, Inc.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Kuma Community`,
     },
     prism: {
       theme: prismThemes.github,

@@ -81,6 +81,14 @@ body {
   outline-offset: 4px;
 }
 
+/* License and other prose links must not rely on color alone. */
+.markdown a,
+article p a,
+article li a {
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
 .navbar {
   border-bottom: 1px solid var(--kuma-border);
 }
@@ -103,10 +111,17 @@ body {
   --kuma-focus: #edc28b;
 }
 
+/* Long document titles must also fit when article text is enlarged. */
+.pagination-nav__link {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
 .footer__link-item {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
+  max-width: 100%;
 }
 
 @media (prefers-reduced-motion: reduce) {

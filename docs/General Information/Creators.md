@@ -1,3 +1,7 @@
+---
+content_license: false
+---
+
 # Recommended Creators and Resources
 
 This page is a curated list of creators and organizations whose work is consistently useful, well-reasoned, and worth following.
