@@ -43,7 +43,7 @@ test('approved copy, semantic structure and content-dependent omission', async (
   await expect(contribute.getByRole('link', {name: 'Contribution guidelines', exact: true})).toHaveAttribute('href', '/docs/Contributing Guide');
   await expect(contribute.getByRole('link', {name: 'GitHub', exact: true})).toHaveAttribute('href', 'https://github.com/KumaCommunity/kumacommunity');
   await expect(page.getByRole('link', {name: /^(Report an error|Suggest content)$/})).toHaveCount(0);
-  for (const [title, copy] of [['Accessible', 'Education without barriers'], ['Practical', 'Real world applications'], ['Independence', 'Built on open standards']]) {
+  for (const [title, copy] of [['Accessible', 'Education without barriers'], ['Practical', 'Real world applications'], ['Independent', 'Built on open standards']]) {
     await expect(page.getByRole('heading', {name: title, exact: true})).toBeVisible();
     await expect(page.getByText(copy, {exact: true})).toBeVisible();
   }
