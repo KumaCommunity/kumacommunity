@@ -1,0 +1,18 @@
+// Cloudflare Workers configuration for the static Docusaurus build.
+// Workers Builds runs `npm run build`, then `npx wrangler deploy` on main and
+// `npx wrangler preview` on other branches. Previews require a `previews`
+// block; without any config file, only production deploys worked (through
+// Wrangler automatic configuration) and every branch preview failed.
+// Asset routing uses Workers defaults, matching the current production site.
+{
+  "name": "kumacommunity",
+  "compatibility_date": "2026-11-22",
+  "assets": {
+    "directory": "./build"
+  },
+  "observability": {
+    "enabled": true
+  },
+  // Static assets only: no bindings, variables or secrets to override.
+  "previews": {}
+}

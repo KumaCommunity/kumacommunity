@@ -77,6 +77,11 @@ configured in the Cloudflare dashboard. GitHub Actions does not deploy. A push
 to `main` is deployed by Cloudflare whether or not CI passes, so merge only
 after CI succeeds.
 
+`wrangler.jsonc` serves the static `build/` directory with default Workers asset
+routing. Builds on `main` run `npx wrangler deploy`; builds on other branches
+run `npx wrangler preview`, which requires the `previews` block. Keep the
+`previews` block when editing the file.
+
 ## Homepage content
 
 The homepage is static, with metadata resolved during `npm start` and
